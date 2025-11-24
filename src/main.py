@@ -1,7 +1,3 @@
-"""
-Archivo principal para la ejecución del programa.
-"""
-
 from pathlib import Path
 from preprocessing import Preprocessor
 from ensemble import EnsembleDelBienestar
@@ -11,9 +7,6 @@ INPUT_PATH = './data/'
 OUTPUT_PATH = './data/processed/'
 
 def get_input_file():
-    """
-    Solicita al usuario el nombre del archivo de entrada y verifica su existencia.
-    """
     while True:
         file_path = input("\nIngrese el nombre del archivo de entrada: ").strip()
         path = Path(INPUT_PATH + file_path)
@@ -24,9 +17,6 @@ def get_input_file():
             print(f"Error: El archivo '{file_path}' no existe. Intente de nuevo.")
 
 def change_file(preprocessor: Preprocessor):
-    """
-    Permite al usuario cambiar el archivo de entrada del preprocesador.
-    """
     print("\n\t\t\tCAMBIAR EL ARCHIVO DE ENTRADA")
     print("Archivo actual:", preprocessor.input_path)
     
@@ -40,9 +30,6 @@ def change_file(preprocessor: Preprocessor):
         print(f"\nError al cambiar el archivo: {e}")
 
 def normalization_menu(preprocessor: Preprocessor):
-    """
-    Menú de normalización de datos.
-    """
     print("\n\t\t\tMÉTODOS DE NORMALIZACIÓN")
     print("1. Min-Max")
     print("2. Z-Score")
@@ -61,7 +48,6 @@ def normalization_menu(preprocessor: Preprocessor):
                 preprocessor.save_data(normalized_df, method='min_max')
                 break
             else:
-                # Si el límite inferior no es menor que el superior, se solicita de nuevo
                 print("Error: El límite inferior debe ser menor que el límite superior. Intente de nuevo.")
     elif choice == '2':
         normalized_df = preprocessor.normalize(method='z_score')
@@ -81,7 +67,6 @@ def normalization_menu(preprocessor: Preprocessor):
                 preprocessor.save_data(normalized_df, method='min_max')
                 break
             else:
-                # Si el límite inferior no es menor que el superior, se solicita de nuevo
                 print("Error: El límite inferior debe ser menor que el límite superior. Intente de nuevo.")
             
         normalized_df = preprocessor.normalize(method='z_score')
@@ -95,9 +80,6 @@ def normalization_menu(preprocessor: Preprocessor):
         print("Opción inválida. Intente de nuevo.")
         
 def discretization_menu(preprocessor: Preprocessor):
-    """
-    Menú de discretización de datos.
-    """
     print("\n\t\t\tDISCRETIZACIÓN BASADA EN ENTROPÍA")
     print("Discretizando usando cuartiles...\n")
     
@@ -105,12 +87,10 @@ def discretization_menu(preprocessor: Preprocessor):
         # Obtener las particiones discretizadas y los metadatos
         df_left, df_right, metadata = preprocessor.discretize()
         
-        # Guardar los resultados
         preprocessor.save_data(df_left, method='discretized_left')
         preprocessor.save_data(df_right, method='discretized_right')
         preprocessor.save_metadata(metadata)
         
-        # Mostrar resultados de la discretización
         print("\nDiscretización completa:")
         print(f"\t- Mejor columna: {metadata['Índice_mejor_columna'][0]}")
         print(f"\t- Punto de corte: {metadata['Mejor_punto_corte'][0]}")
@@ -122,17 +102,12 @@ def discretization_menu(preprocessor: Preprocessor):
         print(f"\nError durante la discretización: {e}")
 
 def ensemble_menu(preprocessor: Preprocessor):
-    """
-    Menú para crear y validar el ensemble.
-    """
     print("\n\t\t\tENSEMBLE DEL BIENESTAR")
     print(f"Archivo de trabajo: {preprocessor.input_path}")
     
     try:
-        # Solicitar número de árboles
         n_trees = int(input("\nIngrese el número de árboles para el ensemble: ").strip())
         
-        # Solicitar opciones de muestreo
         while True:
             print("\n¿Muestrear con reemplazo?")
             print("1. Sí")
@@ -146,7 +121,6 @@ def ensemble_menu(preprocessor: Preprocessor):
                 sample_with_replacement = False
                 break
             else:
-                # Si la opción no es válida, se solicita de nuevo
                 print("Opción inválida. Intente de nuevo.")
         
         while True:
@@ -162,10 +136,8 @@ def ensemble_menu(preprocessor: Preprocessor):
                 attribute_with_replacement = False
                 break
             else:
-                # Si la opción no es válida, se solicita de nuevo
                 print("Opción inválida. Intente de nuevo.")
         
-        # Solicitar número de folds para validación cruzada
         while True:
             folds = int(input("\nIngrese el número de folds para validación cruzada: ").strip())
             if folds > 3:
@@ -173,7 +145,6 @@ def ensemble_menu(preprocessor: Preprocessor):
             else:
                 print("El número de folds debe ser mayor que 3. Intente de nuevo.")
         
-        # Separar atributos y clases
         X = preprocessor.df.iloc[:, :-1]
         y = preprocessor.df.iloc[:, -1]
         
@@ -197,9 +168,6 @@ def ensemble_menu(preprocessor: Preprocessor):
         print(f"\nError durante la creación o validación del ensemble: {e}")
 
 def main():
-    """
-    Función principal del programa.
-    """
     print("\n\t\t\tPREPROCESAMIENTO DE DATOS")
     
     input_file = get_input_file()
