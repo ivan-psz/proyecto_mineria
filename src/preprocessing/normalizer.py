@@ -31,9 +31,7 @@ class Normalizer:
         dims = df.iloc[:, :-1]
         classes = df.iloc[:, -1]
         
-        # Obtiene el valor absoluto máximo de cada dimensión
         max_abs_vals = dims.abs().max(axis=0)
-        
         j_vals = max_abs_vals.apply(lambda x: len(str(int(np.floor(x)))) if x >= 1 else 0)
         
         normalized_df = df / (10 ** j_vals)
