@@ -10,7 +10,7 @@ class Normalizer:
         min_vals = dims.min(axis=0)
         max_vals = dims.max(axis=0)
         
-        normalized_df = (dims- min_vals) / (max_vals - min_vals) * (upper_bound - lower_bound) + lower_bound
+        normalized_df = (dims - min_vals) / (max_vals - min_vals) * (upper_bound - lower_bound) + lower_bound
 
         return pd.concat([normalized_df, classes], axis=1)
     
@@ -34,6 +34,6 @@ class Normalizer:
         max_abs_vals = dims.abs().max(axis=0)
         j_vals = max_abs_vals.apply(lambda x: len(str(int(np.floor(x)))) if x >= 1 else 0)
         
-        normalized_df = df / (10 ** j_vals)
+        normalized_df = dims / (10 ** j_vals)
         
         return pd.concat([normalized_df, classes], axis=1)
