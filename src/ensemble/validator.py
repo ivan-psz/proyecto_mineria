@@ -32,11 +32,11 @@ class Validator:
             errors.append(error)
             
             fold_details.append({
-                'fold': fold_num,
-                'accuracy': accuracy,
-                'error': error,
-                'train_size': len(train_index),
-                'test_size': len(test_index)
+                'Fold': fold_num,
+                'Exactitud': accuracy,
+                'Error': error,
+                'Tamaño de entrenamiento': len(train_index),
+                'Tamaño de prueba': len(test_index)
             })
             
             print(f"Fold {fold_num}/{self.folds} completado. Exactitud: {accuracy}%")
@@ -63,7 +63,7 @@ class Validator:
         
         print("\nDETALLES POR FOLD:")
         for detail in self.results['folds_details']:
-            print(f"Fold {detail['fold']}: Exactitud = {detail['accuracy']}%. Error = {detail['error']}")
+            print(f"Fold {detail['Fold']}: Exactitud = {detail['Exactitud']}%. Error = {detail['Error']}")
             
     def get_results(self) -> Dict:
         return self.results

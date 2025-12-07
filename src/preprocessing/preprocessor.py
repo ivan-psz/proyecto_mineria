@@ -23,7 +23,7 @@ class Preprocessor:
     def summarize_data(self):
         print("\nResumen de los datos:")
         print(f"\tNúmero de filas: {self.df.shape[0]}")
-        print(f"\tNúmero de columnas: {self.df.shape[1]}")
+        print(f"\tNúmero de columnas (contando la clase): {self.df.shape[1]}")
         
     def normalize(self, method: str, **kwargs) -> pd.DataFrame:
         if method == 'min_max':
@@ -35,28 +35,22 @@ class Preprocessor:
         else:
             return self.normalizer.decimal_scaling(self.df)
         
-    def discretize(self) -> Tuple[pd.DataFrame, pd.DataFrame, Dict]:
-        # Calcula la mejor división
-        self.discretizer.compute_info_gain()
-        # Particiona y obtiene los metadatos
-        df_left, df_right, metadata = self.discretizer.discretize()
-        
-        return df_left, df_right, metadata
+    def discretize(self) -> Tuple[pd.DataFrame, Dict]:
+        discretized_df, metadata = self.discretizer.discretize()
+        return discretized_df, metadata
         
     def save_data(self, df: pd.DataFrame, method: str):
-        # Genera un timestamp para el nombre del archivo
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         file_path = f"{self.output_path}/{method}_{timestamp}.csv"
         df.to_csv(file_path, sep=',', header=False, index=False)
         
-        print(f"Datos guardados en: {self.output_path}")
+        print(f"Datos guardados en: {file_path}")
         
     def save_metadata(self, metadata: Dict):
-        # Genera un timestamp para el nombre del archivo
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_path = f"{self.output_path}/metadata_{timestamp}.csv"
+        file_path = f"{self.output_path}/discretization_metadata_{timestamp}.csv"
         
         metadata_df = pd.DataFrame(metadata)
         metadata_df.to_csv(file_path, sep=',', header=True, index=False)
         
-        print(f"Metadatos guardados en: {self.output_path}")
+        print(f"Metadatos guardados en: {file_path}")

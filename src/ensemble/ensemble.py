@@ -58,6 +58,7 @@ class EnsembleDelBienestar:
                 if len(attribute_indices) == 0:
                     attribute_indices = rng.choice(n_attributes, size=n_attributes, replace=False)
             
+            
             # Selecciona los atributos elegidos para las muestras seleccionadas
             X_sample_attr = X_sample[:, attribute_indices]
             
@@ -66,6 +67,13 @@ class EnsembleDelBienestar:
             
             self.trees.append(tree)
             self.attribute_indices.append(attribute_indices)
+            
+            """
+            Líneas agregadas el jueves en la entrega:
+            
+            print("Árbol entrenado con:")
+            print (attribute_indices)
+            """
             
     def classify(self, X: pd.DataFrame) -> np.ndarray:
         # Convierte el DataFrame a arreglo de NumPy
@@ -94,9 +102,7 @@ class EnsembleDelBienestar:
     
     def validate(self, X: pd.DataFrame, y: pd.Series, folds: int = 5):
         self.validator = Validator(folds=folds, random_state=self.random_state)
-        
-        results = self.validator.validate(self, X, y)
-        return results
+        self.validator.validate(self, X, y)
     
     def print_results(self):
         self.validator.print_results()
@@ -104,19 +110,29 @@ class EnsembleDelBienestar:
     def save_validation_results(self):
         results = self.validator.get_results()
         
+        if self.sample_with_replacement:
+            sample_with_replacement_str = 'Sí'
+        else:
+            sample_with_replacement_str = 'No'
+            
+        if self.attribute_with_replacement:
+            attribute_with_replacement_str = 'Sí'
+        else:
+            attribute_with_replacement_str = 'No'
+        
         # Genera un timestamp para el nombre del archivo
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         summary_data = {
             'Árboles': [self.n_trees],
-            'Muestreo_con_reemplazo': [self.sample_with_replacement],
-            'Atributos_con_reemplazo': [self.attribute_with_replacement],
+            'Muestreo con reemplazo': [sample_with_replacement_str],
+            'Atributos con reemplazo': [attribute_with_replacement_str],
             'Folds': [results['folds']],
-            'Exactitud_promedio': [results['mean_accuracy']],
-            'Error_promedio': [results['mean_error']],
-            'Exactitud_desviación_estándar': [results['std_accuracy']],
-            'Error_desviación_estándar': [results['std_error']],
-            'Exactitud_mínima': [results['min_accuracy']],
-            'Exactitud_máxima': [results['max_accuracy']]
+            'Exactitud promedio': [results['mean_accuracy']],
+            'Error promedio': [results['mean_error']],
+            'Desviación estándar de exactitud': [results['std_accuracy']],
+            'Desviación estándar de error': [results['std_error']],
+            'Exactitud mínima': [results['min_accuracy']],
+            'Exactitud máxima': [results['max_accuracy']]
         }
         
         summary_df = pd.DataFrame(summary_data)

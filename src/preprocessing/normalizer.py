@@ -3,7 +3,6 @@ import pandas as pd
 
 class Normalizer:
     def min_max(self, df: pd.DataFrame, lower_bound: float, upper_bound: float) -> pd.DataFrame:
-        # Divide el dataframe en dimensiones y clases
         dims = df.iloc[:, :-1]
         classes = df.iloc[:, -1]
         
@@ -15,7 +14,6 @@ class Normalizer:
         return pd.concat([normalized_df, classes], axis=1)
     
     def z_score(self, df: pd.DataFrame) -> pd.DataFrame:
-        # Divide el dataframe en dimensiones y clases
         dims = df.iloc[:, :-1]
         classes = df.iloc[:, -1]
         
@@ -27,7 +25,6 @@ class Normalizer:
         return pd.concat([normalized_df, classes], axis=1)
     
     def decimal_scaling(self, df: pd.DataFrame) -> pd.DataFrame:
-        # Divide el dataframe en dimensiones y clases
         dims = df.iloc[:, :-1]
         classes = df.iloc[:, -1]
         

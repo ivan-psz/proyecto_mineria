@@ -84,19 +84,12 @@ def discretization_menu(preprocessor: Preprocessor):
     print("Discretizando usando cuartiles...\n")
     
     try:
-        # Obtener las particiones discretizadas y los metadatos
-        df_left, df_right, metadata = preprocessor.discretize()
+        discretized_df, metadata = preprocessor.discretize()
         
-        preprocessor.save_data(df_left, method='discretized_left')
-        preprocessor.save_data(df_right, method='discretized_right')
+        preprocessor.save_data(discretized_df, method='discretization')
         preprocessor.save_metadata(metadata)
-        
-        print("\nDiscretización completa:")
-        print(f"\t- Mejor columna: {metadata['Índice_mejor_columna'][0]}")
-        print(f"\t- Punto de corte: {metadata['Mejor_punto_corte'][0]}")
-        print(f"\t- Ganancia de información: {metadata['Ganancia_información'][0]}")
-        print(f"\t- Muestras en la partición izquierda: {len(df_left)}")
-        print(f"\t- Muestras en la partición derecha: {len(df_right)}")
+                
+        print("\nDiscretización completa.")
         
     except Exception as e:
         print(f"\nError durante la discretización: {e}")
@@ -140,7 +133,7 @@ def ensemble_menu(preprocessor: Preprocessor):
         
         while True:
             folds = int(input("\nIngrese el número de folds para validación cruzada: ").strip())
-            if folds > 3:
+            if folds >= 3:  # Mínimo 3 folds (agregado el jueves en la entrega)
                 break
             else:
                 print("El número de folds debe ser mayor que 3. Intente de nuevo.")
@@ -168,8 +161,6 @@ def ensemble_menu(preprocessor: Preprocessor):
         print(f"\nError durante la creación o validación del ensemble: {e}")
 
 def main():
-    print("\n\t\t\tPREPROCESAMIENTO DE DATOS")
-    
     input_file = get_input_file()
     
     try:
