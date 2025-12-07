@@ -102,5 +102,7 @@ class Discretizer:
                 }
                 
                 self.results.append(results)
+            
+            self.df[col_index] = self.df[col_index].astype(int)
                 
         return self.df, self.results
