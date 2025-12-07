@@ -58,7 +58,6 @@ class EnsembleDelBienestar:
                 if len(attribute_indices) == 0:
                     attribute_indices = rng.choice(n_attributes, size=n_attributes, replace=False)
             
-            
             # Selecciona los atributos elegidos para las muestras seleccionadas
             X_sample_attr = X_sample[:, attribute_indices]
             
